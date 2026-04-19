@@ -45,20 +45,27 @@ pipeline {
 
         stage('Update GitOps Repo') {
             steps {
-                sh '''
-                # Fix detached HEAD issue
-                git checkout -B main
+                withCredentials([usernamePassword(
+                    credentialsId: 'github-creds',
+                    usernameVariable: 'GIT_USER',
+                    passwordVariable: 'GIT_PASS'
+                )]) {
+                    sh '''
+                    git checkout -B main
 
-                sed -i "s|image:.*|image: $DOCKER_IMAGE:$TAG|g" k8s/frontend-deployment.yaml
+                    sed -i "s|image:.*|image: $DOCKER_IMAGE:$TAG|g" k8s/frontend-deployment.yaml
 
-                git config user.name "jenkins"
-                git config user.email "jenkins@example.com"
+                    git config user.name "jenkins"
+                    git config user.email "jenkins@example.com"
 
-                git add .
-                git commit -m "Updated image to $TAG" || echo "No changes"
+                    git add .
+                    git commit -m "Updated image to $TAG" || echo "No changes"
 
-                git push origin main
-                '''
+                    git remote set-url origin https://$GIT_USER:$GIT_PASS@github.com/dharanesh-vn/devops-lab.git
+
+                    git push origin main
+                    '''
+                }
             }
         }
     }
