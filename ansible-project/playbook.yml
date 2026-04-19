@@ -1,0 +1,22 @@
+- name: Setup Web Server
+  hosts: webservers
+  become: yes
+
+  tasks:
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
+
+    - name: Deploy sample web page
+      copy:
+        content: "<h1>Welcome to Ansible Automated Server</h1>"
+        dest: /var/www/html/index.html
