@@ -8,12 +8,6 @@ pipeline {
 
     stages {
 
-        stage('Checkout') {
-            steps {
-                git 'https://github.com/dharanesh-vn/devops-lab.git'
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t $DOCKER_IMAGE:$TAG .'
@@ -56,4 +50,3 @@ pipeline {
         }
     }
 }
-
