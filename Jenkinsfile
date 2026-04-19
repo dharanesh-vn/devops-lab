@@ -20,7 +20,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 sh '''
-                sonar-scanner \
+                /opt/sonar-scanner/bin/sonar-scanner \
                 -Dsonar.projectKey=devops-lab \
                 -Dsonar.sources=. \
                 -Dsonar.host.url=http://localhost:9000 \
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Quality Gate (Simulated)') {
             steps {
-                echo "Quality Gate Passed"
+                echo "Quality Gate Passed ✅"
             }
         }
 
@@ -47,15 +47,25 @@ pipeline {
             steps {
                 sh '''
                 sed -i "s|image:.*|image: $DOCKER_IMAGE:$TAG|g" k8s/frontend-deployment.yaml
-                
+
                 git config user.name "jenkins"
                 git config user.email "jenkins@example.com"
 
                 git add .
-                git commit -m "Updated image to $TAG"
+                git commit -m "Updated image to $TAG" || echo "No changes to commit"
                 git push origin main
                 '''
             }
         }
     }
+
+    post {
+        success {
+            echo "🚀 Pipeline executed successfully!"
+        }
+        failure {
+            echo "❌ Pipeline failed!"
+        }
+    }
 }
+
