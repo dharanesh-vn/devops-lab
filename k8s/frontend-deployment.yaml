@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: nginx:1.25
+        image: roronoazoro1350/frontend:13
         ports:
         - containerPort: 80
         resources:
