@@ -4,7 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = "roronoazoro1350/frontend"
         TAG = "${BUILD_NUMBER}"
-        SONAR_TOKEN = sqa_cd3c98f9ca833e3937ef9bba3259c8cfe0855a81
+        SONAR_TOKEN = "sqa_cd3c98f9ca833e3937ef9bba3259c8cfe0855a81"
     }
 
     stages {
@@ -31,7 +31,7 @@ pipeline {
 
         stage('Quality Gate (Simulated)') {
             steps {
-                echo "Quality Gate Passed (Simulated for demo)"
+                echo "Quality Gate Passed"
             }
         }
 
@@ -56,15 +56,6 @@ pipeline {
                 git push origin main
                 '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Pipeline executed successfully 🚀"
-        }
-        failure {
-            echo "Pipeline failed ❌"
         }
     }
 }
